@@ -1,6 +1,5 @@
 package controllers
 
-import akka.actor.ActorSystem
 import javax.inject.Inject
 import models.{CharacterRepo, SchemaDefinition}
 import play.api.libs.json.{JsObject, JsString, Json}
@@ -11,11 +10,10 @@ import sangria.marshalling.playJson._
 import sangria.parser.{QueryParser, SyntaxError}
 import sangria.renderer.SchemaRenderer
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class GraphQLController @Inject()(system: ActorSystem, cc:ControllerComponents) extends AbstractController(cc) {
-  import system.dispatcher
+class GraphQLController @Inject()(implicit ec:ExecutionContext, cc:ControllerComponents) extends AbstractController(cc) {
 
   def index = Action {
     Ok(views.html.index())

@@ -101,6 +101,8 @@ object SchemaDefinition {
   val EpisodeArg = Argument("episode", OptionInputType(EpisodeEnum),
     description = "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode.")
 
+  val SearchQuery = Argument("text", StringType, description = "search query")
+
   val SearchResult = UnionType("SearchResult",
     description = Some("Human or Droid"),
     List(Human, Droid))
@@ -116,7 +118,11 @@ object SchemaDefinition {
         resolve = ctx ⇒ ctx.ctx.getHuman(ctx arg ID)),
       Field("droid", Droid,
         arguments = ID :: Nil,
-        resolve = Projector((ctx, f) ⇒ ctx.ctx.getDroid(ctx arg ID).get))
+        resolve = Projector((ctx, f) ⇒ ctx.ctx.getDroid(ctx arg ID).get)),
+      Field("search", ListType(SearchResult),
+        description = Some("search Human or Droid"),
+        arguments = SearchQuery :: Nil,
+        resolve = ctx => ctx.ctx.search(ctx.arg(SearchQuery)))
     ))
 
   val StarWarsSchema = Schema(Query)

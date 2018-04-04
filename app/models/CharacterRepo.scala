@@ -9,6 +9,12 @@ class CharacterRepo {
   def getHuman(id: String): Option[Human] = humans.find(c ⇒ c.id == id)
 
   def getDroid(id: String): Option[Droid] = droids.find(c ⇒ c.id == id)
+
+  def search(text: String): Seq[Character] = {
+    val q = text.toLowerCase
+    humans.filter(c => c.name.exists(_.toLowerCase.contains(q))) :::
+      droids.filter(c => c.name.exists(_.toLowerCase.contains(q)))
+  }
 }
 
 object CharacterRepo {

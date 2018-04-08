@@ -1,7 +1,9 @@
 package models
 
+import play.api.libs.json.Json
 import sangria.execution.deferred.{Fetcher, HasId}
 import sangria.schema._
+import sangria.marshalling.playJson._
 
 import scala.concurrent.Future
 
@@ -107,6 +109,21 @@ object SchemaDefinition {
     description = Some("Human or Droid"),
     List(Human, Droid))
 
+  val DroidInput = InputObjectType[DroidInput](
+    "DroidInput",
+    "A schema to update or create Droid",
+    List(
+      InputField("id", OptionInputType(StringType)),
+      InputField("name", OptionInputType(StringType)),
+      InputField("friends", ListInputType(StringType)),
+      InputField("appearsIn", ListInputType(StringType)),
+      InputField("primaryFunction", OptionInputType(StringType))
+    )
+  )
+  implicit val droidFormat = Json.format[DroidInput]
+
+  val DroidInputArg = Argument("droid", DroidInput)
+
   val Query = ObjectType(
     "Query", fields[CharacterRepo, Unit](
       Field("hero", Character,
@@ -125,5 +142,13 @@ object SchemaDefinition {
         resolve = ctx => ctx.ctx.search(ctx.arg(SearchQuery)))
     ))
 
-  val StarWarsSchema = Schema(Query)
+  val Mutation = ObjectType(
+    "Mutation", fields[CharacterRepo, Unit](
+      Field("saveDroid", Droid,
+        arguments = List(DroidInputArg),
+        resolve = ctx => ctx.ctx.saveDroid(ctx.arg(DroidInputArg)))
+    ))
+
+  val StarWarsSchema = Schema(query = Query,
+    mutation = Some(Mutation))
 }

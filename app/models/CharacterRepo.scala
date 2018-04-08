@@ -15,6 +15,14 @@ class CharacterRepo {
     humans.filter(c => c.name.exists(_.toLowerCase.contains(q))) :::
       droids.filter(c => c.name.exists(_.toLowerCase.contains(q)))
   }
+
+  def saveDroid(d: DroidInput): Droid = {
+    Droid(d.id.map(_ + " added").getOrElse("new"),
+      d.name,
+      d.friends,
+      d.parseAppearsIn,
+      d.primaryFunction)
+  }
 }
 
 object CharacterRepo {

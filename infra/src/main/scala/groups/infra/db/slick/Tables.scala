@@ -1,4 +1,4 @@
-package groups.infra.db
+package groups.infra.db.slick
 
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}

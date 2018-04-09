@@ -1,5 +1,4 @@
-package groups.infra.db
-
+package groups.infra.db.slick
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDateTime, OffsetDateTime, ZoneOffset}

@@ -17,12 +17,21 @@ lazy val domain = (project in file("domain"))
     )
   )
 
+lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
+  addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full),
+  scalacOptions += "-Xplugin-require:macroparadise",
+  scalacOptions in (Compile, console) ~= (_ filterNot (_ contains "paradise")) // macroparadise plugin doesn't work in repl yet.
+)
+
 lazy val infra = (project in file("infra"))
   .settings(commonSettings:_*)
   .settings(
     name := "groups-infra",
+    metaMacroSettings,
     libraryDependencies ++= Seq(
       "javax.inject" % "javax.inject" % "1",
+      "org.scalameta" %% "scalameta" % "1.8.0" % Provided,
+      "com.github.domala" %% "domala-paradise" % "0.1.0-beta.9",
       "mysql" % "mysql-connector-java" % "6.0.6",
       "com.typesafe.play" %% "play-slick" % "3.0.3",
       "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3",

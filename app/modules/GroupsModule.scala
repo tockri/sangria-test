@@ -2,8 +2,8 @@ package modules
 
 import com.google.inject.AbstractModule
 import groups.domain.repository.SpaceRepository
-import groups.infra.db.domala.{DomalaConfig, SpaceRepositoryOnDomala}
-import groups.infra.db.slick.SpaceRepositoryOnSlick
+import groups.infra.db.domala.SpaceRepositoryOnDomala
+//import groups.infra.db.slick.SpaceRepositoryOnSlick
 import net.codingwell.scalaguice.ScalaModule
 import org.seasar.doma.jdbc.dialect.Dialect
 import play.api.{Configuration, Environment}
@@ -15,7 +15,7 @@ class GroupsModule(environment: Environment,
   }
 
   private def bindForSlick: Unit = {
-    bind[SpaceRepository].to[SpaceRepositoryOnSlick]
+   // bind[SpaceRepository].to[SpaceRepositoryOnSlick]
   }
 
   private def bindForDomala(): Unit = {

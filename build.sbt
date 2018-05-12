@@ -23,20 +23,32 @@ lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
   scalacOptions in (Compile, console) ~= (_ filterNot (_ contains "paradise")) // macroparadise plugin doesn't work in repl yet.
 )
 
-lazy val infra = (project in file("infra"))
+lazy val infraSlick = (project in file("infra-slick"))
   .settings(commonSettings:_*)
   .settings(
-    name := "groups-infra",
-    metaMacroSettings,
+    name := "groups-infra-slick",
     libraryDependencies ++= Seq(
       "javax.inject" % "javax.inject" % "1",
-      "org.scalameta" %% "scalameta" % "1.8.0" % Provided,
-      "com.github.domala" %% "domala-paradise" % "0.1.0-beta.9",
       "mysql" % "mysql-connector-java" % "6.0.6",
       "com.typesafe.play" %% "play-slick" % "3.0.3",
       "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3",
     )
   ).dependsOn(domain)
+
+lazy val infraDomala = (project in file("infra-domala"))
+  .settings(commonSettings:_*)
+  .settings(
+    name := "groups-infra-domala",
+    metaMacroSettings,
+    libraryDependencies ++= Seq(
+      "javax.inject" % "javax.inject" % "1",
+      "com.zaxxer" % "HikariCP" % "2.7.4",
+      "org.scalameta" %% "scalameta" % "1.8.0" % Provided,
+      "com.github.domala" %% "domala-paradise" % "0.1.0-beta.9",
+      "mysql" % "mysql-connector-java" % "6.0.6",
+    )
+  ).dependsOn(domain)
+
 
 lazy val application = (project in file("application"))
   .settings(commonSettings:_*)
@@ -58,11 +70,12 @@ lazy val root = (project in file("."))
 
     libraryDependencies ++= Seq(
       guice,
+      jdbc,
       "org.sangria-graphql" %% "sangria" % "1.4.0",
       "org.sangria-graphql" %% "sangria-play-json" % "1.0.4",
       "net.codingwell" %% "scala-guice" % "4.1.0",
     )
-  ).dependsOn(application, domain % "test->test;compile->compile", infra)
+  ).dependsOn(application, domain % "test->test;compile->compile", infraDomala)
 
 Test / fork := true
 Test / javaOptions += "-Dconfig.resource=test.conf"

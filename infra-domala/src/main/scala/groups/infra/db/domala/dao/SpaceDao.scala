@@ -1,24 +1,24 @@
 package groups.infra.db.domala.dao
 
-import java.time.{LocalDateTime, OffsetDateTime, ZoneId, ZoneOffset}
+import java.time.{LocalDateTime, ZoneOffset}
 
 import domala._
 import domala.jdbc.Result
 import groups.domain.entity.{Space, SpaceId}
 
 @Entity
+@Table(name = "space")
 case class SpaceEntity(@Id
-                       @GeneratedValue(strategy = GenerationType.SEQUENCE)
-                       @SequenceGenerator(sequence = "space_id_seq")
-                       id: ID[SpaceEntity],
+                       @GeneratedValue(strategy = GenerationType.IDENTITY)
+                       id: Long,
                        name: String,
                        nulabAppsSpaceKey: String,
                        created: LocalDateTime) {
-  def space:Space = Space(SpaceId(id.value), name, nulabAppsSpaceKey, created.atOffset(ZoneOffset.UTC))
+  def space:Space = Space(SpaceId(id), name, nulabAppsSpaceKey, created.atOffset(ZoneOffset.UTC))
 }
 object SpaceEntity {
   def apply(space:Space):SpaceEntity =
-    new SpaceEntity(id = ID(space.id.value),
+    new SpaceEntity(id = space.id.value,
       name = space.name,
       nulabAppsSpaceKey = space.nulabAppsSpaceKey,
       created = space.created.toLocalDateTime)
@@ -44,3 +44,5 @@ trait SpaceDao {
 
 
 }
+
+

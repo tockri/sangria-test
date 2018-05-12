@@ -20,8 +20,8 @@ class SpaceRepositorySpec extends FlatSpec with DiagrammedAssertions with Inject
 
   "SpaceRepository" can "store nulab" in {
     val s:Space = await(spaceRepository.store(Space.create("nulab", "dummy-space-key")))
-    assert(s.id.value > 1)
     assert(s.name == "nulab")
     assert(s.nulabAppsSpaceKey == "dummy-space-key")
+    assert(s.id.value > 1)
   }
 }

@@ -5,9 +5,7 @@ package groups.domain.entity
   * ID (Long型)
   */
 abstract class EntityId(val value:Long) extends Serializable {
-  val defined = true
-
-  require((defined && value > 0) || (!defined && value == 0))
+  val defined = value > 0
 
   override def equals(obj: scala.Any): Boolean = {
     obj match {

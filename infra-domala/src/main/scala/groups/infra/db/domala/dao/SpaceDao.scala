@@ -21,7 +21,7 @@ object SpaceEntity {
     new SpaceEntity(id = space.id.value,
       name = space.name,
       nulabAppsSpaceKey = space.nulabAppsSpaceKey,
-      created = space.created.toLocalDateTime)
+      created = space.created.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime)
 }
 
 
